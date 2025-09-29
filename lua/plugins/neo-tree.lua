@@ -8,12 +8,26 @@ return {
     },
     config = function()
         require("neo-tree").setup({
+            visible = true,
             filesystem = {
-                follow_current_file = {
-                    enabled = true,
+                follow_current_file = true,
+                filtered_items = {
+                    visible = true,
+                    hide_dotfiles = false,
+                    hide_gitignored = false,
                 },
             },
-            vim.keymap.set("n", "<C-n>", ":Neotree toggle<CR>", { noremap = true, silent = true }),
         })
+        local function toggle_neotree_focus()
+            local buf_name = vim.api.nvim_buf_get_name(0)
+
+            if buf_name:match("neo%-tree") then
+                vim.cmd("wincmd p")
+            else
+                vim.cmd("Neotree")
+            end
+        end
+
+        vim.keymap.set("n", "<C-n>", toggle_neotree_focus, { noremap = true, silent = true })
     end,
 }
